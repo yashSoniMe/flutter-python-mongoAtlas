@@ -1,11 +1,20 @@
 import os
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pymongo import MongoClient
 
 app = FastAPI()
 
-# Retrieve DB Connection string from environment variable
+# Enable CORS for Flutter Web
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows requests from Flutter Web running on localhost
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows GET, POST, OPTIONS, etc.
+    allow_headers=["*"],
+)
+
 MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
 db = client["my_app_db"]
